@@ -1,0 +1,106 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath, amssymb}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+
+\title{Varying the Parameters of Driver Reaction in the Optimal Velocity Model}
+\author{Pavlos Constas{-}Malevanets \& Yang Yang Zhang}
+\date{October 3, 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Phantom traffic jams emerge spontaneously in otherwise uniform car flows, even without bottlenecks or lane changes. The Optimal Velocity Model (OVM) captures this phenomenon via a driver sensitivity parameter that drives each vehicle toward a headway{-}dependent desired speed \cite{Bando1995PRE,TreiberKesting2013}. Standard OVM implementations use a constant driver sensitivity parameter \(a\), which acts like an inverse reaction time. We propose to replace this constant with a state{-}dependent sensitivity \(a(h,\Delta v)\) that increases as drivers get closer and/or approach a slower predecessor. We will (i) review the OVM and its linear stability, (ii) design physically plausible forms for \(a(h,\Delta v)\), (iii) test their impact on stability boundaries and nonlinear wave formation on a ring road, (iv) evaluate robustness to modeling choices, and (v) investigate how these variations reconcile the OVM with empirical observations of stop{-}and{-}go waves \cite{Sugiyama2008NJP,NonlinearDynamics2022Modes}.
+\end{abstract}
+
+\section{Motivation and Objectives}
+Controlled ring-road experiments show that a column of human drivers on a closed loop can develop stop{-}and{-}go waves without external perturbations \cite{Sugiyama2008NJP}. Minimal car{-}following models reproduce this by relaxing toward an ``optimal'' velocity determined by the distance to the next car (headway) \cite{Bando1995PRE,TreiberKesting2013}. In the classical OVM, the driver sensitivity \(a\) is constant, but real drivers brake more aggressively when close and adjust more gently when far. Our goal is to model this difference by replacing \(a\) with a state{-}dependent function and to evaluate its consequences for wave onset, wave speed, and wave amplitude in ring traffic.
+
+\section{Background}
+Let \(x_i(t)\) denote the position of car \(i\) on a ring-road of length \(L\), velocity \(v_i=\dot x_i\), and headway
+\[
+h_i = x_{i+1} - x_i ,
+\]
+where vehicle length is assumed to be negligible. The standard OVM \cite{Bando1995PRE} is
+\begin{align}
+\dot x_i &= v_i, \\
+\dot v_i &= a\,\big[V(h_i) - v_i\big],
+\end{align}
+where \(V(h)\) is a monotonically increasing ``optimal velocity'' function. A commonly used one is \cite{TreiberKesting2013}
+\[
+V(h) = \frac{v_{\max}}{2}\left[\tanh\!\left(\frac{h-h_c}{w}\right)+1\right].
+\]
+Here \(v_{\max}\) is the free-flow speed, \(h_c\) is the critical headway at which drivers transition from cautious to comfortable speeds, and \(w>0\) (with the same units as \(h\)) is the steepness parameter controlling how sharply \(V(h)\) rises around \(h_c\). 
+
+The parameter \(a>0\) in  Eq. (2) is the relaxation rate or driver sensitivity: it sets how quickly a driver adjusts their speed toward the optimal velocity \(V(h_i)\). We will replace constant \(a\) with \(a(h,\Delta v)\) where \(\Delta v_i=v_{i+1}-v_i\), increasing sensitivity when headway is small or the follower is closing on a slower leader, while bounding \(a\in[a_{\min},a_{\max}]\) (see delayed and generalized OVM variants \cite{HasebeBando1998Delay,NonlinearDynamics2022Modes}). If this makes the system more stable, we also want to investigate the conditions under which a traffic jam forms. 
+
+\section{Research Timeline}
+\textbf{Model setup (Oct 6--12).} Specify $V(h)$ and define possible state-dependent sensitivities $a(h,\Delta v)$  Choose parameters $(v_{\max},h_c,w)$ from literature \cite{Bando1995PRE,TreiberKesting2013}.\\
+\noindent \textbf{Linear stability (Oct 13--26).} Derive stability conditions for constant $a$, then extend to variable $a(h,\Delta v)$ and compare. \\
+\noindent \textbf{Nonlinear dynamics (Oct 27--Nov 9).} Run simulations on rings with $N=20$--40 vehicles. Euler’s method will be tested as a baseline, while the main simulations will use fourth-order Runge--Kutta (RK4). Measure stop-and-go wave amplitude, wavelength, and speed; compare to the constant-$a$ case. \\
+\noindent \textbf{Sensitivity and robustness (Nov 10--23).} Test alternative $V(h)$ and other bounded forms (i.e. following a car up to 1km away, speed limits) of $a(h,\Delta v)$. Check solver and timestep convergence. \\
+\noindent \textbf{Final Report (Nov 24--Dec 5).} Integrate linear and nonlinear findings, prepare figures, and finalize the report. We expect variable sensitivity to stabilize flow at smaller headways and yield waves consistent with experimental observations \cite{Sugiyama2008NJP}.
+
+
+\section{Expected Outcomes}
+We anticipate that replacing constant sensitivity with $a(h,\Delta v)$ will change the stability of the system, allowing uniform traffic flow to remain stable at shorter headways than in the classical OVM because this adaptive sensitivity reduces the amplification of small disturbances into stop–and–go waves, effectively extending the range of headways over which the flow remains stable. Overall, the project will demonstrate a simple extension to the ODE model that may reconcile minimal traffic theory with realistic driver behavior.
+
+\newpage
+\begin{thebibliography}{10}
+
+\bibitem{Bando1995PRE}
+M.~Bando, K.~Hasebe, A.~Nakayama, A.~Shibata, and Y.~Sugiyama.
+\newblock Dynamical model of traffic congestion and numerical simulation.
+\newblock {Physical Review E}, 51(2):1035--1042, 1995.
+
+\bibitem{TreiberKesting2013}
+M.~Treiber and A.~Kesting.
+\newblock Traffic Flow Dynamics: Data, Models and Simulation.
+\newblock Springer, Berlin, Heidelberg, 2013.
+
+\bibitem{Sugiyama2008NJP}
+Y.~Sugiyama, M.~Fukui, M.~Kikuchi, K.~Hasebe, A.~Nakayama, K.~Nishinari,
+	S.-i. Tadaki, and S.~Yukawa.
+\newblock Traffic jams without bottlenecks—experimental evidence for the
+	physical mechanism of the formation of a jam.
+\newblock {New Journal of Physics}, 10:033001, 2008.
+
+\bibitem{HasebeBando1998Delay}
+M.~Bando, K.~Hasebe, K.~Nakanishi, and A.~Nakayama.
+\newblock Analysis of Optimal Velocity Model with Explicit Delay.
+\newblock arXiv: patt-sol/9805002, 1998.
+
+\bibitem{Bando1998PREDelay}
+M.~Bando, K.~Hasebe, K.~Nakanishi, and A.~Nakayama.
+\newblock Analysis of optimal velocity model with explicit delay.
+\newblock {Physical Review E}, 58(5):5429--5435, 1998.
+
+\bibitem{Bando1996Phenomenological}
+M.~Bando, K.~Hasebe, A.~Nakayama, A.~Shibata, and Y.~Sugiyama.
+\newblock Phenomenological Models of Traffic Flow.
+\newblock arXiv: patt-sol/9608002, 1996.
+
+\bibitem{NonlinearDynamics2022Modes}
+K.~Martinovich.
+\newblock Nonlinear effects of saturation in the car-following model.
+\newblock {Nonlinear Dynamics}, 111:11751--11767, 2023.
+
+\bibitem{Orosz2006RSPA}
+G.~Orosz, R.~E. Wilson, and G.~Step{\'a}n.
+\newblock Subcritical Hopf bifurcations in a car-following model with
+	reaction-time delay.
+\newblock {Proceedings of the Royal Society A}, 462(2073):2643--2670, 2006.
+
+\bibitem{Orosz2010PhilTrans}
+G.~Orosz, R.~E. Wilson, and G.~Step{\'a}n.
+\newblock Traffic jams: dynamics and control.
+\newblock {Philosophical Transactions of the Royal Society A}, 368(1928):
+	4455--4479, 2010.
+
+\end{thebibliography}
+
+\end{document}
